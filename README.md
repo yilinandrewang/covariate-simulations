@@ -1,2 +1,2 @@
 # covariate-simulations
-# The syntax in this repo is the one used for the Monte Carlo simulations in Wang et al. (in prep).
+# [WARNING: The syntaxes in this repo might not be up to date and should not be used to reproduce the Monte Carlo simulations in Wang et al. (in prep).]
