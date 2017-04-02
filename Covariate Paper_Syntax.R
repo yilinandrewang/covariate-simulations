@@ -4,35 +4,35 @@
 # BY WANG, SPARKS, GONZALES, HESS & LEDGERWOOD
 
 # R CODE WRITTEN BY Y. ANDRE WANG & JOSEPH E. GONZALES
-# LAST UPDATE: 03/26/2017
+# LAST UPDATE: 04/02/2017
 
 ############################# INTRO ###############################
 
 # The purpose of these simulations is to compare the changes in Type I error 
 # rate and power from flexible covariate use. 
-# We focus on two analytic strategies that researchers might use in a 
+# We focus on two analytic practices that researchers might use in a 
 # two-condition experiment where a promising, unanticipated covariate
 # is measured before the experimental manipulation:
 
-# Baseline Strategy: Only test the effect of IV (X) on DV (Y)
+# Baseline Practice: Only test the effect of IV (X) on DV (Y)
 
-# Flexible-Covariate Strategy: Test the effect of X on Y, 
+# Flexible-Covariate Practice: Test the effect of X on Y, 
                 # and the effect of X on Y after controlling for covariate (C)
 
-# We created three functions that simulate the different strategies
+# We created three functions that simulate the different practices
 # we considered in the manuscript. Each can be used to estimate the trade-off
 # between Type I error inflation and power boost.
 
 # 1. SimData
   # See MAIN SIMULATIONS for details.
-  # This function compares the trade-off produced by the baseline strategy 
-  # and the flexible-covariate strategy, which is the trade-off we focus on.
+  # This function compares the trade-off produced by the baseline practice 
+  # and the flexible-covariate practice, which is the trade-off we focus on.
 
 # 2. SuppSimData
   # See ADDITIONAL SIMULATIONS for details.
-  # This function compares the trade-off produced by the baseline strategy,
-  # add the flexible-covariate strategy, in addition to other potential
-  # strategies for including a single, unanticipated covariate we considered.
+  # This function compares the trade-off produced by the baseline practice,
+  # add the flexible-covariate practice, in addition to other potential
+  # practices for including a single, unanticipated covariate we considered.
 
 # 3. SimData5
   # See MULTIPLE COVARIATES for details.
@@ -115,22 +115,22 @@ SimData <- function(Nsims, Ncell0, Ncell1 = Ncell0, diff.mu, rcy, SDY0,
     temp[i, "d.P.X.C"] <<- coef(summary(lm(y ~ x + c, data = dat)))[2, 1]
   })
   
-  ######## Baseline Strategy #########
+  ######## Baseline Practice #########
   Baseline <- sum(temp$P.X.noC <= alpha)/dim(temp)[1]
   
-  ######## Flexible-Covariate Strategy ########
+  ######## Flexible-Covariate Practice ########
   Covariate <- sum(unlist(lapply(1:dim(temp)[1], function(i) {
     min(temp[i, c("P.X.noC", "P.X.C")])
   })) <= alpha)/dim(temp)[1]
   
   ######## Merge results #############
-  Strategy <- c("Baseline", "Covariate")
+  Practice <- c("Baseline", "Covariate")
   if (diff.mu == 0) {
     TypeIError <- c(Baseline, Covariate)
-    Results <- data.frame(Strategy, TypeIError)
+    Results <- data.frame(Practice, TypeIError)
   } else {
     Power <- c(Baseline, Covariate)
-    Results <- data.frame(Strategy, Power)
+    Results <- data.frame(Practice, Power)
   }
   return(list(Results, temp))
 }
@@ -193,48 +193,48 @@ N160_d0_rho0.4[1]
 # Calculations conducted in G*Power using t-test/Means: Difference
 # between two independent means (two groups)/Type of Power Analysis: A priori
 
-##### *-- Accuracy and Precision of the Two Strategies ####
+##### *-- Accuracy and Precision of the Two Practices ####
 # Running the syntax below will reproduce the corresponding values reported
 # in Table S3.
 
 dat_N160_d0.4_rho0.4 <- as.data.frame(N160_d0.4_rho0.4[2])
 dat_N160_d0_rho0.4 <- as.data.frame(N160_d0_rho0.4[2])
 
-# Mean of the sample effect size estimates by the Baseline Strategy
+# Mean of the sample effect size estimates by the Baseline Practice
 round(mean(dat_N160_d0.4_rho0.4$d.P.X.noC), 3) # 0.402
 
-# Mean of the sample effect size estimates by the Covariate Strategy
+# Mean of the sample effect size estimates by the Covariate Practice
 round(mean(dat_N160_d0.4_rho0.4$d.P.X.C), 3) # 0.402
 
-# SD of the sample effect size estimates by the Baseline Strategy
+# SD of the sample effect size estimates by the Baseline Practice
 round(sd(dat_N160_d0.4_rho0.4$d.P.X.noC), 3) # 0.159
 
-# SD of the sample effect size estimates by the Covariate Strategy
+# SD of the sample effect size estimates by the Covariate Practice
 round(sd(dat_N160_d0.4_rho0.4$d.P.X.C), 3) # 0.146
 
 
 ######################## ADDITIONAL SIMULATIONS ##########################
 
 # In this section, the function SuppSimData below allows us to simulate 
-# strategies in addition to the two strategies described above when a researcher
+# practices in addition to the two practices described above when a researcher
 # is considering a single unanticipated, promising covariate. These additional 
-# strategies are described in Section IV of the Supplemental Materials. 
+# practices are described in Section IV of the Supplemental Materials. 
 # For situations in which a researcher is considering multiple unanticipated 
 # covariates, see the section "MULTIPLE COVARIATES" below.
 
-# Covariate Strategy described by Simmons et al. (2011): 
+# Covariate Practice described by Simmons et al. (2011): 
   # Test (1) the effect of X on Y, 
   # (2) the effect of X on Y controlling for C,
   # (3) the interactive effect of X and C on Y, 
   # and (4) the effect of X on Y controlling for both C
   # and the interaction between C and Y.
 
-# Modified Covariate Strategy (A): 
+# Modified Covariate Practice (A): 
   # Test the effect of X on Y, 
   # and the effect of X on Y controlling for C...
   # only if r(C, Y) >= .3 in the sample.
 
-# Modified Covariate Strategy (B):
+# Modified Covariate Practice (B):
   # Test the effect of X on Y, 
   # and the effect of X on Y controlling for C...
   # only if r(C, Y) is significantly different from 0 in the sample.
@@ -291,15 +291,15 @@ SuppSimData <- function(Nsims, Ncell0, Ncell1 = Ncell0, diff.mu, rcy, SDY0,
     temp[i, "d.P.X.C"] <<- coef(summary(lm(y ~ x + c, data = dat)))[2, 1]
   })
   
-  ######## Baseline Strategy #########
+  ######## Baseline Practice #########
   Baseline <- sum(temp$P.X.noC <= alpha)/dim(temp)[1]
   
-  ######## Flexible-Covariate Strategy ########
+  ######## Flexible-Covariate Practice ########
   Covariate <- sum(unlist(lapply(1:dim(temp)[1], function(i) {
     min(temp[i, c("P.X.noC", "P.X.C")])
   })) <= alpha)/dim(temp)[1]
   
-  ######## Simmons et al. (2011) Strategy #####
+  ######## Simmons et al. (2011) Practice #####
   Simmons <- sum(unlist(lapply(1:dim(temp)[1], function(i) {
     if (temp[i, "P.IntXC"] <= alpha) {
       temp[i, "P.IntXC"]
@@ -308,7 +308,7 @@ SuppSimData <- function(Nsims, Ncell0, Ncell1 = Ncell0, diff.mu, rcy, SDY0,
     }
   })) <= alpha)/dim(temp)[1]
   
-  ######## Modified Covariate Strategy (a) ####
+  ######## Modified Covariate Practice (a) ####
   Modified.A <- sum(unlist(lapply(1:dim(temp)[1], function(i) {
     if (temp[i, "Rcy"] >= 0.3) {
       min(temp[i, c("P.X.noC", "P.X.C")])
@@ -317,7 +317,7 @@ SuppSimData <- function(Nsims, Ncell0, Ncell1 = Ncell0, diff.mu, rcy, SDY0,
     }
   })) <= alpha)/dim(temp)[1]
   
-  ######## Modified Covariate Strategy (b) ####
+  ######## Modified Covariate Practice (b) ####
   Modified.B <- sum(unlist(lapply(1:dim(temp)[1], function(i) {
     if (temp[i, "P.Rcy"] <= 0.05) {
       min(temp[i, c("P.X.noC", "P.X.C")])
@@ -327,14 +327,14 @@ SuppSimData <- function(Nsims, Ncell0, Ncell1 = Ncell0, diff.mu, rcy, SDY0,
   })) <= alpha)/dim(temp)[1]
   
   ######## Merge results ########
-  Strategy <- c("Baseline", "Covariate", "Simmons", 
+  Practice <- c("Baseline", "Covariate", "Simmons", 
                 "Modified.A", "Modified.B")
   if (diff.mu == 0) {
     TypeIError <- c(Baseline, Covariate, Simmons, Modified.A, Modified.B)
-    Results <- data.frame(Strategy, TypeIError)
+    Results <- data.frame(Practice, TypeIError)
   } else {
     Power <- c(Baseline, Covariate, Simmons, Modified.A, Modified.B)
-    Results <- data.frame(Strategy, Power)
+    Results <- data.frame(Practice, Power)
   }
   return(list(Results, temp))
 }
@@ -360,19 +360,19 @@ Supp_N160_d0.4_rho0.2 <- SuppSimData(10000, 80, 80, 0.4, 0.2, 1, 1, 1, 1)
 
 # Power
 Supp_N160_d0.4_rho0.4[1]
-# You should get 0.8111 for the Covariate Strategy, and
+# You should get 0.8111 for the Covariate Practice, and
 # 0.8223 for the Simmons approach (change = 0.0112)
 
 # Type I error rate
 Supp_N160_d0_rho0.4[1]
-# You should get 0.0675 for the Covariate Strategy, and
+# You should get 0.0675 for the Covariate Practice, and
 # 0.1182 for the Simmons approach (change = 0.0507)
 
 #### *-- Using the Observed Correlation in the Sample ####
 
-# We explored two variations of the Covariate Strategy that use the observed
+# We explored two variations of the Covariate Practice that use the observed
 # correlation between C and Y in the sample:
-# Modified Covariate Strategy (A), and Modified Covariate Strategy (B). 
+# Modified Covariate Practice (A), and Modified Covariate Practice (B). 
 # See the function SuppSimData() above for details.
 
 # When rho < .3: Power
@@ -398,7 +398,7 @@ Supp_N160_d0_rho0.4[1]
 # Both Modified (A) and Modified (B) perform similarly to Covariate.
 
 # As you can see, neither Modified (A) nor Modified (B) offers a more favorable
-# trade-off than the Baseline or the Covariate strategy.
+# trade-off than the Baseline or the Covariate practice.
 # Using the observed correlation in the sample does not offer protection against
 # Type I error inflation. It can undercut power boost.
 
@@ -421,11 +421,11 @@ adj1.N160_d0_rho0.4 <- SimData(10000, 80, 80, 0, 0.4, 1, 1, 1, 1,
 
 # Type I Error Rate
 adj1.N160_d0_rho0.4[1]
-# As expected, Type I error rate is exactly .05 now for the Covariate Strategy.
+# As expected, Type I error rate is exactly .05 now for the Covariate Practice.
 
 # Power
 adj1.N160_d0.4_rho0.4[1]
-# You should get 0.7716 for the Covariate Strategy.
+# You should get 0.7716 for the Covariate Practice.
 # Note that since we used the alpha adjustment,
 # the baseline power is not the baseline output produced here;
 # it should be the one prior to adjustment (0.7131).
@@ -443,7 +443,7 @@ adj2.N160_d0_rho0.4[1]
 
 # Power
 adj2.N160_d0.4_rho0.4[1]
-# You should get 0.7546 for the Covariate Strategy.
+# You should get 0.7546 for the Covariate Practice.
 # Power boost = 0.7546 - 0.7131 = 0.0415.
 
 # What happens when rho is smaller (e.g., rho = .1)?
@@ -458,7 +458,7 @@ adj2.N160_d0_rho0.1[1]
 
 # Power
 adj2.N160_d0.4_rho0.1[1]
-# You should get 0.6663 for the Covariate Strategy.
+# You should get 0.6663 for the Covariate Practice.
 # We actually have a power loss of 0.7131 - 0.6663 = 0.0468 now.
 
 
@@ -632,22 +632,22 @@ SimData5 <- function(Nsims, Ncell0, Ncell1 = Ncell0, diff.mu, rc1y, rc2y, rc3y,
     temp[i, "d.P.X.C5"] <<- coef(summary(lm(y ~ x + c5, data = dat)))[2, 1]
   })
   
-  ######## Baseline Strategy #########
+  ######## Baseline Practice #########
   Baseline <- sum(temp$P.X.noC <= alpha)/dim(temp)[1]
   
-  ######## Covariate Strategy ########
+  ######## Covariate Practice ########
   Covariate <- sum(unlist(lapply(1:dim(temp)[1], function(i) {
     min(temp[i, c("P.X.noC", "P.X.C1", "P.X.C2", "P.X.C3", "P.X.C4", "P.X.C5")])
   })) <= alpha)/dim(temp)[1]
   
   ######## Merge results #############
-  Strategy <- c("Baseline", "Covariate")
+  Practice <- c("Baseline", "Covariate")
   if (diff.mu == 0) {
     TypeIError <- c(Baseline, Covariate)
-    Results <- data.frame(Strategy, TypeIError)
+    Results <- data.frame(Practice, TypeIError)
   } else {
     Power <- c(Baseline, Covariate)
-    Results <- data.frame(Strategy, Power)
+    Results <- data.frame(Practice, Power)
   }
   return(list(Results, temp))
 }
