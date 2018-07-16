@@ -4,7 +4,7 @@
 # BY WANG, SPARKS, GONZALES, HESS & LEDGERWOOD
 
 # R CODE WRITTEN BY Y. ANDRE WANG & JOSEPH E. GONZALES
-# LAST UPDATE: 04/02/2017
+# LAST UPDATE: 07/16/2018
 
 ############################# INTRO ###############################
 
@@ -165,7 +165,7 @@ N160_d0.4_rho0.4 <- SimData(Nsims = 10000, Ncell0 = 80, Ncell1 = 80,
 # seed: seed value you wish to use (default seed = 42, used in the manuscript)
 
 # See generated data
-View(N160_d0.4_rho0.4[2])
+View(N160_d0.4_rho0.4[[2]])
 
 ##### *-- Type I Error Rate #####
 N160_d0_rho0.4 <- SimData(Nsims = 10000, Ncell0 = 80, Ncell1 = 80, diff.mu = 0, 
@@ -174,7 +174,7 @@ N160_d0_rho0.4 <- SimData(Nsims = 10000, Ncell0 = 80, Ncell1 = 80, diff.mu = 0,
 # We simply set d = 0 to obtain Type I error rate
 
 # See generated data
-View(N160_d0_rho0.4[2])
+View(N160_d0_rho0.4[[2]])
 
 ############################# Results #######################################
 
